@@ -23,17 +23,13 @@
 * dotnet new webapi --name api
 
 * Install the code generator    
-    * Add the design
-    * build
-    * then scaffold
-
     * dotnet tool uninstall --global dotnet-aspnet-codegenerator
-    * dotnet tool install --global dotnet-aspnet-codegenerator --version 3.1.0
-    * dotnet tool update dotnet --global
+    * dotnet tool install --global dotnet-aspnet-codegenerator 
 
-    * dotnet tool install -g dotnet-aspnet-codegenerator --version 3.1
-    * dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Tools
-    * dotnet add pacakge Microsoft.AspNetCore.All
+    * dotnet aspnet-codegenerator -h
+        * should yield nothing
+
+    * dotnet aspnet-codegenerator controller -name Controllers/test
 
 * Create a new controller
     * Have a get endpoint that returns an OkObjectResult("Dingus");
