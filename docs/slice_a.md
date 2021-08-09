@@ -122,6 +122,34 @@
 
     ```
 
+# Database Integration
+
+* Write the infra for an azure sql database
+
+* Connect to it
+
+* Use unity to read-write 
+    * Setup deserialization
+        * TO DESIERALIZE:
+            ```C#
+                    services.AddControllers()
+                        .AddNewtonsoftJson();
+            ```
+            ```
+                dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson 
+            ```
+
+    * Create an endpoint, that takes an object
+        * save it to the database
+        * returns an id
+
+    * Create an endpoint that
+
+* test the values?
+    * Use the existing setup
+    * Create a test where
+        * You post an object to one endpoint
+        * You retrieve it from another endpoint
 
 -----------------------------------------------------------------------------
 # Move this into the next kata
