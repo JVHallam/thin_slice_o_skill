@@ -184,10 +184,19 @@
 
     * Entity 
         * dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-        * dotnet ef tool
+        * dotnet add package Microsoft.EntityFrameworkCore.Design
+        * dotnet add package Microsoft.EntityFrameworkCore.Tools
+
+        * setup the code
+
+        * dotnet tool install --global dotnet-ef
+        * dotnet-ef migrations add
+
         * Can you inject into the constructor of the created objects?
 
 * Use unity to read-write 
+    * 
+
     * Setup deserialization
         * TO DESIERALIZE:
             ```C#
