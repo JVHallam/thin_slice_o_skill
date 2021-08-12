@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace entity_test.Migrations
+namespace api.Migrations
 {
     public partial class customer : Migration
     {

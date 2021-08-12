@@ -10,12 +10,43 @@
     * 3) Bundle it all into a container
         * Docker
         * Setting the environment variables
+        * docker-compose.yml?
 
-    * 4) Deploy onto azure:
+    * 4) Use K6 To smoke test the container
+        * I want some basic tests for smoke
+        * Can they then be used for load?
+
+    * 5) Deploy onto azure:
         * That's deployed on azure
         * Via terraform
+        * Powershell to automate 
+        * Do i need the ACR here?
+            * Terraform that too
 
-    * 5) Using VIM To handle all the linting
+    ---------------------------------
+    * TBD:
+        * 8) Pipeline?
+            * Create a repo
+            * Put the yaml in that repo
+            * Get it to build an image
+
+        * 6) Checking our tools?
+            * Using VIM to lint C#?
+            * Using VIM to lint in general
+            * Using VIM to jump between tags?
+            * Using VIM to navigate like i'm in VS?
+            * using VIM to find files by name, faster
+            * setting a base point
+            * CLI Linting
+            * w/e
+
+        * 7) More C# Stuff?
+            * Database initialisation in program.cs
+            * http factory
+            * automapper for endpoint models to EF models?
+            * using endpoint models in tests
+            * Configs?
+
 
 # ASP.NET
 
@@ -276,6 +307,51 @@
 
     * Run it
 
+    * Setup the controller + services + shit
+        * Create the context + handle the migration stuff ( Until i know more about how Context works, put the env variable stuff here )
+        ```C#
+        public class CustomerContext : DbContext{
+            public DbSet<Customer> Customers { get; set; }
+
+            protected override void OnConfiguring(DbContextOptionsBuilder options){
+                var connectionString = Environment.GetEnvironmentVariable("connection_string");
+                options.UseSqlServer(connectionString);
+            }
+        }
+        ```
+
+        * startup.cs injection:
+        ```C#
+        services.AddDbContext<CustomerContext>();
+        ```
+
+        * To save the customer object into the database
+        ```C#
+        _customerContext.Customers.Add( customer );
+        _customerContext.SaveChanges();
+        ```
+
+        * To query, you use linq:
+        ```C#
+        var customer = _customerContext.Customers.First(customer => customer.Id == customerId);
+        ```
+
+
+
 # For later:
+* Environment variables:
+    * What's a clean way to handle checking these exist
+    * Clean way of passing these in
+    * clean way of failing when those aren't found
+
+* Initialising the database:
+    * Like the above
+    * Done in the program.cs
+    * https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro?view=aspnetcore-5.0#:~:text=services.AddDbContext%3CSchoolContext%3E(options%20%3D%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20options.UseSqlServer(Configuration.GetConnectionString(%22DefaultConnection%22)))%3B
+
+* Controller models to database model mapping
+    * Auto mapper.
+    * Just mapping controller models to EF models
+
 * Middleware
     * Use fluent validation, to create a middleware, to validate incoming objects
