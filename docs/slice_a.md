@@ -40,6 +40,11 @@
             * CLI Linting
             * w/e
 
+        * 6.5)
+            * Add a razor controller
+            * A JS page that can save a customer
+            * Get all the customers, render them out
+
         * 7) More C# Stuff?
             * Database initialisation in program.cs
             * http factory
