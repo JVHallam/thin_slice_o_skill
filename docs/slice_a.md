@@ -183,19 +183,59 @@
         * There has to be a better way than my own object, right?
 
     * Entity 
-        * dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-        * dotnet add package Microsoft.EntityFrameworkCore.Design
-        * dotnet add package Microsoft.EntityFrameworkCore.Tools
+    ```sh
+    dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+    dotnet add package Microsoft.EntityFrameworkCore.Design
+    dotnet add package Microsoft.EntityFrameworkCore.Tools
+    ```
 
-        * setup the code
+    * Create the db context stuff
+    ```C#
+    using System;
+    using Microsoft.EntityFrameworkCore;
+    using System.ComponentModel.DataAnnotations;
 
+    public class CustomerContext : DbContext{
+        public DbSet<Customer> Customers { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options){
+            var connectionString = Environment.GetEnvironmentVariable("connection_string");
+            options.UseSqlServer(connectionString);
+        }
+    }
+
+    public class Customer{
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+    ```
+
+    * Handle the migrations
         * dotnet tool install --global dotnet-ef
-        * dotnet-ef migrations add
+        * dotnet-ef migrations add customer
+        * dotnet-ef database update
+            * Will check that the schema is now in the database
 
-        * Can you inject into the constructor of the created objects?
+    * Integrate this into the api, somehow
+    ```C#
+    using var dbContext = new CustomerContext();
 
-* Use unity to read-write 
-    * 
+    var customer = new Customer{
+        Name = "Peen",
+        Age = 10 
+    };
+
+    dbContext.Customers.Add( customer );
+
+    dbContext.SaveChanges();
+    ```
+
+* Use entity to read-write 
+    * Create the test:
+        * 
+
 
     * Setup deserialization
         * TO DESIERALIZE:
@@ -207,7 +247,15 @@
                 dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson 
             ```
 
-    * Create an endpoint, that takes an object
+    * Create an endpoint, that takes a customer object
+    ```
+    public class Customer{
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+    ```
         * save it to the database
         * returns an id
 
@@ -218,5 +266,16 @@
 * test the values?
     * Use the existing setup
     * Create a test where
-        * You post an object to one endpoint
-        * You retrieve it from another endpoint
+        * You post an object with random values to one endpoint
+            ```sh
+            dotnet add package Bogus
+            ```
+        * You retrieve it from another endpoint, checking the values are the same
+
+    * Implement the saving to the endpoint
+
+    * Run it
+
+# For later:
+* Middleware
+    * Use fluent validation, to create a middleware, to validate incoming objects

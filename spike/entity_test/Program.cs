@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace entity_test
 {
-
     public class CustomerContext : DbContext{
         public DbSet<Customer> Customers { get; set; }
 
@@ -15,6 +14,7 @@ namespace entity_test
     }
 
     public class Customer{
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         public int Age { get; set; }
@@ -27,6 +27,19 @@ namespace entity_test
             var a = Environment.GetEnvironmentVariable("connection_string");
             Console.WriteLine("Hello World!");
             Console.WriteLine(a);
+
+            //Now, use the damn thing!
+            using var dbContext = new CustomerContext();
+
+            var customer = new Customer{
+                Name = "Peen",
+                Age = 10 
+            };
+
+            dbContext.Customers.Add( customer );
+
+            dbContext.SaveChanges();
+
         }
     }
 }
