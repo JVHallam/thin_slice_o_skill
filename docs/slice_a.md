@@ -341,7 +341,59 @@
         var customer = _customerContext.Customers.First(customer => customer.Id == customerId);
         ```
 
+# Docker:
+* Create a docker image, using the given api
+    * Create the dockerfile
+    ```Dockerfile
+    # https://hub.docker.com/_/microsoft-dotnet
+    FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+    WORKDIR /source
 
+    # copy csproj and restore as distinct layers
+    COPY *.csproj .
+    RUN dotnet restore --disable-parallel
+
+    # copy everything else and build app
+    COPY . .
+    # RUN dotnet publish -c release -o /app --no-restore
+    RUN dotnet publish -c release -o /app 
+
+    # final stage/image
+    FROM mcr.microsoft.com/dotnet/aspnet:5.0
+    WORKDIR /app
+    COPY --from=build /app .
+    EXPOSE 80
+    ENTRYPOINT ["dotnet", "api.dll"]
+    ```
+
+    * Run the commands to build and test the image:
+    ```bash
+    sudo docker build . --file Dockerfile -t thinsliceapi
+
+    # List the images
+    sudo docker images 
+
+    # Run the image
+    # Bind host port 5000, to container port 80
+    sudo docker run -p 5000:80 -d thinsliceapi 
+
+    sudo docker kill <container_name>
+    ```
+
+        * run the image
+        * stop the image
+
+
+* Make sure to set the environment variables
+
+
+
+* Run the SE2E tests against said image
+    * Pass in the url
+* Maybe:
+    * Deploy this to azure, using terraform
+
+------------------------------------------------------------------------------------------------------------------------------
 
 # For later:
 * Environment variables:
