@@ -251,7 +251,7 @@
     * Handle the migrations
         * At the base of the project
         ```ps1
-        $ENV:connection_string="dingus"
+        $ENV:connection_string="Server=localhost,1433;Database=customer;User Id=sa;Password=thisismypassword1!;"
         dotnet tool install --global dotnet-ef
         dotnet-ef migrations add customer
         dotnet-ef database update
