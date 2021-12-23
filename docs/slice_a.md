@@ -6,22 +6,19 @@
     * 2) Setup and integrate the database
         * That has a sql database
             * Using Entity to handle the interaction
+         * Use a SQL container here
 
     * 3) Bundle it all into a container
         * Docker
+        * Buildling the application 
         * Setting the environment variables
-        * docker-compose.yml?
+        * docker-compose.yml
 
-    * 4) Use K6 To smoke test the container
-        * I want some basic tests for smoke
-        * Can they then be used for load?
-
-    * 5) Deploy onto azure:
-        * That's deployed on azure
-        * Via terraform
-        * Powershell to automate 
-        * Do i need the ACR here?
-            * Terraform that too
+    * 4) Work it out. Something C# focused, DI or something similar would be nice
+      * Something C# Focused
+      * DI?
+      * Something related to the above would be nice
+      * Look through what the work application has to do, go from there
 
     ---------------------------------
     * TBD:
@@ -394,6 +391,38 @@
     * Pass in the url
 * Maybe:
     * Deploy this to azure, using terraform
+
+------------------------------------------------------------------------------------------------------------------------------
+# Update: Using the web application factory for tests, instead of spinning up and testing an instance
+* Get the testing packages to the xunit project
+```ps1
+dotnet add package Microsoft.AspNetCore.Mvc.Testing
+dotnet add package Microsoft.NET.Test.Sdk
+```
+    
+* Add a reference to the other project in the .csproj
+```xml
+<ItemGroup>
+ <ProjectReference Include="..\api\api.csproj" />
+</ItemGroup>
+```
+   
+* (Dotnet core 6) In the api project, expose the partial program class, Program.cs:
+```c#
+//Final line
+public partial class Program { }
+```
+
+* Create the client and the application factory in you test.cs
+```c#
+var application = new WebApplicationFactory<Program>()
+   .WithWebHostBuilder(builder =>
+           {
+           // ... Configure test services
+           });
+
+var client = application.CreateClient();
+```
 
 ------------------------------------------------------------------------------------------------------------------------------
 
