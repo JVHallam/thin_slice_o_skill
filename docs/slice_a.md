@@ -249,10 +249,14 @@
     ```
 
     * Handle the migrations
-        * dotnet tool install --global dotnet-ef
-        * dotnet-ef migrations add customer
-        * dotnet-ef database update
-            * Will check that the schema is now in the database
+        * At the base of the project
+        ```ps1
+        $ENV:connection_string="dingus"
+        dotnet tool install --global dotnet-ef
+        dotnet-ef migrations add customer
+        dotnet-ef database update
+        ```
+        * Will check that the schema is now in the database
 
     * Integrate this into the api, somehow
     ```C#
@@ -270,8 +274,6 @@
 
 * Use entity to read-write 
     * Create the test:
-        * 
-
 
     * Setup deserialization
         * TO DESIERALIZE:
