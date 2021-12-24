@@ -423,6 +423,98 @@ var application = new WebApplicationFactory<Program>()
 
 var client = application.CreateClient();
 ```
+------------------------------------------------------------------------------------------------------------------------------
+* DOTNET CORE 6 WITH EF - Handling migrations inside the code
+* The customer model:
+```c#
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace api.entity.Models
+{
+    public class Customer
+    {
+        public int Id { get; set; }
+        [Required]
+        public string Name{ get; set; }
+        public int Age { get; set; }
+    }
+}
+```
+
+* The customer context
+```c#
+using System;
+using api.entity.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace api.entity.Context
+{
+    public class CustomerContext : DbContext
+    {
+        public DbSet<Customer> Customers { get; set; }
+
+        public CustomerContext(DbContextOptions options) : base(options)
+        {
+        }
+    }
+}
+```
+
+* The Program.cs
+```c#
+using api.entity.Context;
+using Microsoft.EntityFrameworkCore;
+
+//Checking the connection string
+var connectionString = Environment.GetEnvironmentVariable("connection_string");
+if(String.IsNullOrEmpty(connectionString)){
+    throw new Exception("CONNECTION STRING BOYO");
+}
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//Registering the contexts
+builder.Services.AddDbContext<CustomerContext>(
+            options => options.UseSqlServer(connectionString)
+        );
+
+//Using the contexts to setup the migration
+var context = builder.Services.BuildServiceProvider()
+                   .GetService<CustomerContext>();
+context.Database.Migrate();
+
+var app = builder.Build();
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+public partial class Program { }
+```
+
+
 
 ------------------------------------------------------------------------------------------------------------------------------
 
