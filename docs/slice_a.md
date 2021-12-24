@@ -514,8 +514,45 @@ app.Run();
 public partial class Program { }
 ```
 
+# DockerFile and Docker compose:
+* The dockerfile for building the api
+```Dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
+WORKDIR /source
+COPY ./api .
 
+RUN dotnet restore
+
+RUN dotnet publish -c release -o /app 
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY --from=build /app .
+
+ENV ASPNETCORE_URLS=http://+:5000  
+
+ENTRYPOINT [ "dotnet", "api.dll" ]
+```
+
+* The docker-compose.yml for running the api with the SQL
+```docker-compose.yml
+services:
+  api:
+    image: "jakes_api"
+    ports:
+    - "5000:5000"
+    environment:
+    - "connection_string=Server=sql,1433;Database=customer;User Id=sa;Password=thisismypassword1!;"
+
+  sql:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+    - "1433:1433"
+    environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=thisismypassword1!
+```
 ------------------------------------------------------------------------------------------------------------------------------
 
 # For later:
